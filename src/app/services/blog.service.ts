@@ -15,13 +15,14 @@ export class BlogService {
     return this.firestore.collection('posts', ref => ref.orderBy('timestamp', 'desc')).valueChanges();
   }
 
-  addPost(content: string, uploadUrl: string = '', fileType: string = ''): Promise<void> {
+  addPost(content: string, uploadUrl: string = '', fileType: string = '', location: { lat: number, lng: number } | null = null): Promise<void> {
     const id = this.firestore.createId();
     return this.firestore.collection('posts').doc(id).set({
       id,
       content,
       uploadUrl,
       fileType,
+      location,
       timestamp: new Date()
     });
   }

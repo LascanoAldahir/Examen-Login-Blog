@@ -24,6 +24,9 @@
         <ion-icon name="document-attach-outline"></ion-icon> Adjuntar archivo
       </ion-button>
       <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept=".pdf,image/*">
+      <ion-button (click)="getLocation()">
+        <ion-icon name="location-outline"></ion-icon> Ubicación
+      </ion-button>
       <ion-button (click)="addPost()">
         <ion-icon name="send-outline"></ion-icon> Enviar
       </ion-button>
