@@ -47,20 +47,28 @@ export class BlogPage implements OnInit {
 
   getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7C${latitude},${longitude}&key=${this.googleMapsApiKey}`;
-        
-        console.log('Generated Image URL:', imageUrl);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const imageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=15&size=600x300&maptype=roadmap&markers=color:red%7C${latitude},${longitude}&key=${this.googleMapsApiKey}`;
+          
+          console.log('Generated Image URL:', imageUrl);
 
-        this.http.get(imageUrl, { responseType: 'blob' }).subscribe((blob) => {
-          console.log('Blob received:', blob);
-          const file = new File([blob], `location_${latitude}_${longitude}.png`, { type: 'image/png' });
-          this.uploadFileFromBlob(file, `location_images/${file.name}`, latitude, longitude);
-        });
-      }, (error) => {
-        console.error('Error obtaining location', error);
-      });
+          this.http.get(imageUrl, { responseType: 'blob' }).subscribe((blob) => {
+            console.log('Blob received:', blob);
+            const file = new File([blob], `location_${latitude}_${longitude}.png`, { type: 'image/png' });
+            this.uploadFileFromBlob(file, `location_images/${file.name}`, latitude, longitude);
+          });
+        },
+        (error) => {
+          console.error('Error obtaining location', error);
+        },
+        {
+          enableHighAccuracy: true, // Mejora la precisión, si es posible
+          timeout: 10000, // Tiempo máximo de espera para obtener la ubicación (en milisegundos)
+          maximumAge: 0 // Fuerza a obtener la ubicación más reciente
+        }
+      );
     } else {
       console.error('Geolocation is not supported by this browser.');
     }
